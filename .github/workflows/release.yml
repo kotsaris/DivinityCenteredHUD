@@ -1,0 +1,51 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Checks the Lua/meta.lsx versions agree, packs src/ and verifies the round-trip.
+      # On a tag, also fails unless the tag equals v<version>.
+      - name: Build package
+        run: python tools/build.py ${{ startsWith(github.ref, 'refs/tags/v') && format('--tag {0}', github.ref_name) || '' }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CenteredHUD
+          path: dist/CenteredHUD.pak
+
+      - name: Create version release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/CenteredHUD.pak
+
+      - name: Update latest build
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest build
+          prerelease: true
+          files: dist/CenteredHUD.pak

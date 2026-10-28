@@ -1,0 +1,7 @@
+{
+    "RequiredExtensionVersion": 60,
+    "ModTable": "CenteredHUD",
+    "FeatureFlags": [
+        "Lua"
+    ]
+}

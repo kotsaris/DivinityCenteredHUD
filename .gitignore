@@ -1,0 +1,8 @@
+# tools/build.py output
+dist/
+*.pak
+
+# Unpacked game/mod files used for research; not ours to ship
+reference/
+
+__pycache__/
