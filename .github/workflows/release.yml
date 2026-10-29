@@ -47,5 +47,6 @@ jobs:
         with:
           tag_name: latest
           name: Latest build
-          prerelease: true
+          prerelease: false
+          make_latest: true
           files: dist/CenteredHUD.pak
